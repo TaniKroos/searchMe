@@ -29,7 +29,7 @@ import {
     form.addEventListener("submit", submitTheSearch);
   };
   
-  // Procedural "workflow" function
+  
   const submitTheSearch = (event) => {
     event.preventDefault();
     deleteSearchResults();
@@ -37,7 +37,7 @@ import {
     setSearchFocus();
   };
   
-  // Procedural
+ 
   const processTheSearch = async () => {
     clearStatsLine();
     const searchTerm = getSearchTerm();
