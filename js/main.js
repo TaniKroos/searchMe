@@ -1,35 +1,48 @@
-import { setSearchFocus } from "./searchBar.js";
-import { getSearchTerm } from "./dataFunctions.js"
-
-document.addEventListener("readystatechange",(event)=>{
-    if(event.target.readyState === "complete"){
-        initApp();
+import {
+    setSearchFocus,
+    showClearTextButton,
+    clearSearchText,
+    clearPushListener
+  } from "./searchBar.js";
+  import {
+    deleteSearchResults,
+    buildSearchResults,
+    clearStatsLine,
+    setStatsLine
+  } from "./searchResults.js";
+  import { getSearchTerm, retrieveSearchResults } from "./dataFunctions.js";
+  
+  document.addEventListener("readystatechange", (event) => {
+    if (event.target.readyState === "complete") {
+      initApp();
     }
-})
-
-const initApp = () =>{
-    //set focus
-
+  });
+  
+  const initApp = () => {
     setSearchFocus();
-    // 3 listeners clear text
-
+    const search = document.getElementById("search");
+    search.addEventListener("input", showClearTextButton);
+    const clear = document.getElementById("clear");
+    clear.addEventListener("click", clearSearchText);
+    clear.addEventListener("keydown", clearPushListener);
     const form = document.getElementById("searchBar");
     form.addEventListener("submit", submitTheSearch);
-
-}
-
-const submitTheSearch = (event) =>{
+  };
+  
+  // Procedural "workflow" function
+  const submitTheSearch = (event) => {
     event.preventDefault();
-    //delete search results
-    //process the search
-    //set the focus
-
+    deleteSearchResults();
     processTheSearch();
     setSearchFocus();
-}
-
-const processTheSearch = async () =>{
-    const searcTerm = getSearchTerm();
-    if(searcTerm === "") return;
-    const resultArray = await retrieveSearchResults(searcTerm);
-}
+  };
+  
+  // Procedural
+  const processTheSearch = async () => {
+    clearStatsLine();
+    const searchTerm = getSearchTerm();
+    if (searchTerm === "") return; //
+    const resultArray = await retrieveSearchResults(searchTerm);
+    if (resultArray.length) buildSearchResults(resultArray);
+    setStatsLine(resultArray.length);
+  };         
